@@ -1,0 +1,18 @@
+﻿Entityframework 6.0
+//https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/
+1. Enable-Migrations
+2. Add-Migration InitialMigration
+3. Update-Database
+4. Add-Migration LevelTurnMigration
+5. Update-Database
+6. Add-Migration RelationTablesMigration
+7. Update-Database
+8. Add-Migration LevelObjectiveMigration
+9. Update-Database
+10. Add-Migration PlayTimesMigration
+11. Update-Database //data exists
+12. Add-Migration PlayStatsMigration
+13. Update-Database //data exists
+//
+Entityframework Core
+1. Add-Migration InitialMigration
