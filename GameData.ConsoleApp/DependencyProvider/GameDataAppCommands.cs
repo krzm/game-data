@@ -1,65 +1,22 @@
-﻿using Core;
+﻿using Console.Lib;
+using Core.Lib;
 using GameData.Lib;
 using System.Windows.Input;
 using Unity;
-using Unity.Injection;
-using GameData.Lib.Repository;
-using Console.Lib;
 
 namespace GameData.ConsoleApp
 {
-	public class GameDataDependencyProvider : ConsoleAppDependencyProvider
+	public class GameDataAppCommands
+		: UnityDependencyProvider
 	{
-		public override string AppName => "GameData";
-
-		public GameDataDependencyProvider(
-			IUnityContainer unityContainer) :
-				base(unityContainer)
+		public GameDataAppCommands(
+			IUnityContainer container)
+			: base(container)
 		{
 		}
 
-		protected override void RegisterUnitOfWork()
+		public override void RegisterDependencies()
 		{
-			Container.RegisterType<IGameDataUnitOfWork, GameDataUnitOfWork>();
-		}
-
-		protected override void RegisterCommandNameFactories()
-		{
-			Container
-				.RegisterType<IFactory<string[]>, OneWordNameFactory>(
-					"one word"
-					, new InjectionConstructor(new object[] {
-						new string[]
-						{
-							"help".ToLowerInvariant()
-							, "exit".ToLowerInvariant()
-						}}));
-			Container
-				.RegisterType<IFactory<string[]>, DataCommandNameFactory>(
-					new InjectionConstructor(new object[] {
-						new string[]
-						{
-							""
-							,"insert"
-							,"update"
-						}
-						, new string[]
-						{
-							nameof(Difficulty).ToLowerInvariant()
-							, nameof(Game).ToLowerInvariant()
-							, nameof(Level).ToLowerInvariant()
-							, nameof(LevelTurn).ToLowerInvariant()
-							, nameof(Play).ToLowerInvariant()
-							, nameof(PlayStats).ToLowerInvariant()
-							, nameof(Strategy).ToLowerInvariant()
-							, nameof(StrategyItem).ToLowerInvariant()
-							, nameof(StrategyStrategyItem).ToLowerInvariant()
-						}}));
-		}
-
-		protected override void RegisterCommands()
-		{
-			base.RegisterCommands();
 			Container
 				.RegisterType<ICommand, GameReadCommand>(Commands.Read(nameof(Game)))
 				.RegisterType<ICommand, GameInsertCommand>(Commands.Insert(nameof(Game)))
@@ -84,11 +41,6 @@ namespace GameData.ConsoleApp
 				.RegisterType<ICommand, LevelTurnReadCommand>(Commands.Read(nameof(LevelTurn)))
 				.RegisterType<ICommand, LevelTurnInsertCommand>(Commands.Insert(nameof(LevelTurn)))
 				.RegisterType<ICommand, LevelTurnUpdateCommand>(Commands.Update(nameof(LevelTurn)));
-		}
-
-		protected override void RegisterProgram()
-		{
-			RegisterProgram<GameDataProgram>(nameof(CommandParser));
 		}
 	}
 }

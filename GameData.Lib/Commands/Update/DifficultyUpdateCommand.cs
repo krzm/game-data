@@ -1,21 +1,22 @@
 ﻿using Console.Lib;
-using GameData.Lib;
 using GameData.Lib.Repository;
 
-namespace GameData.ConsoleApp
+namespace GameData.Lib
 {
-	public class DifficultyUpdateCommand : GameDataReaderCommand<Difficulty>
+    public class DifficultyUpdateCommand : DataCommand<Difficulty>
 	{
+		private readonly IGameDataUnitOfWork unitOfWork;
+		private readonly IConsoleIO consoleIO;
+		private readonly IReader<string> textReader;
+
 		public DifficultyUpdateCommand(
 			IGameDataUnitOfWork unitOfWork
 			, IConsoleIO consoleIO
-			, IReader<string> textReader) : base(unitOfWork, consoleIO, textReader)
+			, IReader<string> textReader)
 		{
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+			this.unitOfWork = unitOfWork;
+			this.consoleIO = consoleIO;
+			this.textReader = textReader;
 		}
 
 		public override void Execute(object parameter)
@@ -23,19 +24,19 @@ namespace GameData.ConsoleApp
 			var name = nameof(Difficulty.Name);
 			var description = nameof(Difficulty.Description);
 
-			ConsoleIO.WriteLine($"Select {TypeName} Id.");
-			var id = int.Parse(ConsoleIO.ReadLine());
-			var game = GameDataUnit.Difficulty.GetByID(id);
+			consoleIO.WriteLine($"Select {TypeName} Id.");
+			var id = int.Parse(consoleIO.ReadLine());
+			var game = unitOfWork.Difficulty.GetByID(id);
 
-			ConsoleIO.WriteLine($"Select property number. 1-{name}, 2-{description}");
-			var nr = int.Parse(ConsoleIO.ReadLine());
+			consoleIO.WriteLine($"Select property number. 1-{name}, 2-{description}");
+			var nr = int.Parse(consoleIO.ReadLine());
 			if (nr == 1)
-				game.Name = TextReader.Read(name);
+				game.Name = textReader.Read(new ReadConfig(50, name));
 			if (nr == 2)
-				game.Description = TextReader.Read(description);
+				game.Description = textReader.Read(new ReadConfig(250, description));
 			
-			UnitOfWork.Save();
-			ConsoleIO.WriteLine($"{TypeName} updated.");
+			unitOfWork.Save();
+			consoleIO.WriteLine($"{TypeName} updated.");
 		}
 	}
 }

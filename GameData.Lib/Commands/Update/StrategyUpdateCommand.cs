@@ -1,41 +1,41 @@
-﻿using Console.Lib;
-using GameData.Lib;
+﻿using System.Collections.Generic;
+using Console.Lib;
 using GameData.Lib.Repository;
 
-namespace GameData.ConsoleApp
+namespace GameData.Lib
 {
-	public class StrategyUpdateCommand : GameDataReaderCommand<Difficulty>
+	public class StrategyUpdateCommand : DataCommand<Strategy>
 	{
+		private readonly IGameDataUnitOfWork unitOfWork;
+
+		private readonly ICommandRunner commandRunner;
+
+		private readonly IReader<string> requiredTextReader;
+
 		public StrategyUpdateCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO
-			, IReader<string> textReader) : base(unitOfWork, consoleIO, textReader)
+			, ICommandRunner commandRunner
+			, List<IReader<string>> textReader)
 		{
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+			this.unitOfWork = unitOfWork;
+			this.commandRunner = commandRunner;
+			requiredTextReader = textReader[0];
 		}
 
 		public override void Execute(object parameter)
 		{
-			var name = nameof(Strategy.Name);
-			var description = nameof(Strategy.Description);
+			var id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TypeName} Id.")));
+			var model = unitOfWork.Strategy.GetByID(id);
 
-			ConsoleIO.WriteLine($"Select {TypeName} Id.");
-			var id = int.Parse(ConsoleIO.ReadLine());
-			var game = GameDataUnit.Strategy.GetByID(id);
-
-			ConsoleIO.WriteLine($"Select property number. 1-{name}, 2-{description}");
-			var nr = int.Parse(ConsoleIO.ReadLine());
+			var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6,
+				$"Select property number. 1-{nameof(Strategy.Name)}, 2-{nameof(Strategy.Description)}.")));
 			if (nr == 1)
-				game.Name = TextReader.Read(name);
+				model.Name = requiredTextReader.Read(new ReadConfig(50, nameof(Strategy.Name)));
 			if (nr == 2)
-				game.Description = TextReader.Read(description); ;
-			
-			UnitOfWork.Save();
-			ConsoleIO.WriteLine($"{TypeName} updated.");
+				model.Description = requiredTextReader.Read(new ReadConfig(250, nameof(Strategy.Description)));
+
+			unitOfWork.Save();
+			commandRunner.RunCommand(nameof(Strategy).ToLowerInvariant());
 		}
 	}
 }

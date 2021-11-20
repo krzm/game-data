@@ -1,34 +1,33 @@
 ﻿using Console.Lib;
-using GameData.Lib;
 using GameData.Lib.Repository;
 
-namespace GameData.ConsoleApp
+namespace GameData.Lib
 {
-	public class PlayStatsReadCommand : GameDataIOCommand
+	public class PlayStatsReadCommand : DataCommand<PlayStats>
 	{
+		private readonly IGameDataUnitOfWork unitOfWork;
+		private readonly IConsoleIO consoleIO;
+
 		public PlayStatsReadCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO) : base(unitOfWork, consoleIO)
+			, IConsoleIO consoleIO)
 		{
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+			this.unitOfWork = unitOfWork;
+			this.consoleIO = consoleIO;
 		}
 
 		public override void Execute(object parameter)
 		{
-			foreach (var item in GameDataUnitOfWork.PlayStats.Get(includeProperties: "Play"))
+			foreach (var item in unitOfWork.PlayStats.Get(includeProperties: "Play"))
 			{
-				ConsoleIO.WriteLine($"{nameof(PlayStats.Id)} : {item.Id}");
-				ConsoleIO.WriteLine($"{nameof(PlayStats.PlayId)} : {item.PlayId}");
-				ConsoleIO.WriteLine($"{nameof(Play.Description)} : {item.Play.Description}");
-				ConsoleIO.WriteLine($"{nameof(PlayStats.Win)} : {item.Win}");
-				ConsoleIO.WriteLine($"{nameof(PlayStats.TurnsPlayed)} : {item.TurnsPlayed}");
-				ConsoleIO.WriteLine($"{nameof(PlayStats.Resources)} : {item.Resources}");
-				ConsoleIO.WriteLine($"{nameof(PlayStats.UnitsLost)} : {item.UnitsLost}");
-				ConsoleIO.WriteLine($"{nameof(PlayStats.UnitsLevelUps)} : {item.UnitsLevelUps}");
+				consoleIO.WriteLine($"{nameof(PlayStats.Id)} : {item.Id}");
+				consoleIO.WriteLine($"{nameof(PlayStats.PlayId)} : {item.PlayId}");
+				consoleIO.WriteLine($"{nameof(Play.Description)} : {item.Play.Description}");
+				consoleIO.WriteLine($"{nameof(PlayStats.Win)} : {item.Win}");
+				consoleIO.WriteLine($"{nameof(PlayStats.TurnsPlayed)} : {item.TurnsPlayed}");
+				consoleIO.WriteLine($"{nameof(PlayStats.Resources)} : {item.Resources}");
+				consoleIO.WriteLine($"{nameof(PlayStats.UnitsLost)} : {item.UnitsLost}");
+				consoleIO.WriteLine($"{nameof(PlayStats.UnitsLevelUps)} : {item.UnitsLevelUps}");
 			}
 		}
 	}

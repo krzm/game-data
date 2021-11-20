@@ -1,29 +1,28 @@
 ﻿using Console.Lib;
-using GameData.Lib;
 using GameData.Lib.Repository;
 
-namespace GameData.ConsoleApp
+namespace GameData.Lib
 {
-	public class StrategyItemReadCommand : GameDataIOCommand
+	public class StrategyItemReadCommand : DataCommand<Strategy>
 	{
+		private readonly IGameDataUnitOfWork unitOfWork;
+		private readonly IConsoleIO consoleIO;
+
 		public StrategyItemReadCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO) : base(unitOfWork, consoleIO)
+			, IConsoleIO consoleIO)
 		{
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+			this.unitOfWork = unitOfWork;
+			this.consoleIO = consoleIO;
 		}
 
 		public override void Execute(object parameter)
 		{
-			foreach (var item in GameDataUnitOfWork.StrategyItem.Get())
+			foreach (var item in unitOfWork.StrategyItem.Get())
 			{
-				ConsoleIO.WriteLine($"{nameof(StrategyItem.Id)} : {item.Id}");
-				ConsoleIO.WriteLine($"{nameof(StrategyItem.Name)} : {item.Name}");
-				ConsoleIO.WriteLine($"{nameof(StrategyItem.Description)} : {item.Description}");
+				consoleIO.WriteLine($"{nameof(StrategyItem.Id)} : {item.Id}");
+				consoleIO.WriteLine($"{nameof(StrategyItem.Name)} : {item.Name}");
+				consoleIO.WriteLine($"{nameof(StrategyItem.Description)} : {item.Description}");
 			}
 		}
 	}

@@ -1,49 +1,50 @@
 ﻿using Console.Lib;
-using GameData.Lib;
 using GameData.Lib.Repository;
 
-namespace GameData.ConsoleApp
+namespace GameData.Lib
 {
-	public class PlayStatsInsertCommand : GameDataReaderCommand<PlayStats>
+	public class PlayStatsInsertCommand : DataCommand<PlayStats>
 	{
+		private readonly IGameDataUnitOfWork unitOfWork;
+		private readonly IConsoleIO consoleIO;
+		private readonly IReader<string> textReader;
+
 		public PlayStatsInsertCommand(
 			IGameDataUnitOfWork unitOfWork
 			, IConsoleIO consoleIO
-			, IReader<string> textReader) : base(unitOfWork, consoleIO, textReader)
+			, IReader<string> textReader)
 		{
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+			this.unitOfWork = unitOfWork;
+			this.consoleIO = consoleIO;
+			this.textReader = textReader;
 		}
 
 		public override void Execute(object parameter)
 		{
 
-			ConsoleIO.WriteLine($"Select {nameof(Play)} Id.");
-			var id = int.Parse(ConsoleIO.ReadLine());
-			var item = GameDataUnit.Play.GetByID(id);
+			consoleIO.WriteLine($"Select {nameof(Play)} Id.");
+			var id = int.Parse(consoleIO.ReadLine());
+			var item = unitOfWork.Play.GetByID(id);
 
 			while (item == null)
 			{
-				ConsoleIO.WriteLine($"Id {id} doesn't exist.");
-				ConsoleIO.WriteLine($"Select {nameof(Play)} Id.");
-				id = int.Parse(ConsoleIO.ReadLine());
-				item = GameDataUnit.Play.GetByID(id);
+				consoleIO.WriteLine($"Id {id} doesn't exist.");
+				consoleIO.WriteLine($"Select {nameof(Play)} Id.");
+				id = int.Parse(consoleIO.ReadLine());
+				item = unitOfWork.Play.GetByID(id);
 			}
 
-			GameDataUnit.PlayStats.Insert(
+			unitOfWork.PlayStats.Insert(
 				new PlayStats
 				{
 					PlayId = item.Id
-					, Win = bool.Parse(TextReader.Read(nameof(PlayStats.Win)))
-					, TurnsPlayed = int.Parse(TextReader.Read(nameof(PlayStats.TurnsPlayed)))
-					, Resources= int.Parse(TextReader.Read(nameof(PlayStats.Resources)))
-					, UnitsLost = int.Parse(TextReader.Read(nameof(PlayStats.UnitsLost)))
-					, UnitsLevelUps = int.Parse(TextReader.Read(nameof(PlayStats.UnitsLevelUps)))
+					, Win = bool.Parse(textReader.Read(new ReadConfig(6, nameof(PlayStats.Win))))
+					, TurnsPlayed = int.Parse(textReader.Read(new ReadConfig(6, nameof(PlayStats.TurnsPlayed))))
+					, Resources= int.Parse(textReader.Read(new ReadConfig(6, nameof(PlayStats.Resources))))
+					, UnitsLost = int.Parse(textReader.Read(new ReadConfig(6, nameof(PlayStats.UnitsLost))))
+					, UnitsLevelUps = int.Parse(textReader.Read(new ReadConfig(6, nameof(PlayStats.UnitsLevelUps))))
 				});
-			GameDataUnit.Save();
+			unitOfWork.Save();
 		}
 	}
 }

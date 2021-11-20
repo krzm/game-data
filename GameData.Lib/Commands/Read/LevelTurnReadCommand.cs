@@ -1,30 +1,29 @@
 ﻿using Console.Lib;
-using GameData.Lib;
 using GameData.Lib.Repository;
 
-namespace GameData.ConsoleApp
+namespace GameData.Lib
 {
-	public class LevelTurnReadCommand : GameDataIOCommand
+	public class LevelTurnReadCommand : DataCommand<LevelTurn>
 	{
+		private readonly IGameDataUnitOfWork unitOfWork;
+		private readonly IConsoleIO consoleIO;
+
 		public LevelTurnReadCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO) : base(unitOfWork, consoleIO)
+			, IConsoleIO consoleIO)
 		{
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+			this.unitOfWork = unitOfWork;
+			this.consoleIO = consoleIO;
 		}
 
 		public override void Execute(object parameter)
 		{
-			foreach (var item in GameDataUnitOfWork.LevelTurn.Get(includeProperties: "Level,Difficulty"))
+			foreach (var item in unitOfWork.LevelTurn.Get(includeProperties: "Level,Difficulty"))
 			{
-				ConsoleIO.WriteLine($"{nameof(LevelTurn.Id)} : {item.Id}");
-				ConsoleIO.WriteLine($"{nameof(Level.Name)} : {item.Level.Name}");
-				ConsoleIO.WriteLine($"{nameof(Difficulty.Name)} : {item.Difficulty.Name}");
-				ConsoleIO.WriteLine($"{nameof(LevelTurn.Turns)} : {item.Turns}");
+				consoleIO.WriteLine($"{nameof(LevelTurn.Id)} : {item.Id}");
+				consoleIO.WriteLine($"{nameof(Level.Name)} : {item.Level.Name}");
+				consoleIO.WriteLine($"{nameof(Difficulty.Name)} : {item.Difficulty.Name}");
+				consoleIO.WriteLine($"{nameof(LevelTurn.Turns)} : {item.Turns}");
 			}
 		}
 	}

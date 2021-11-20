@@ -27,6 +27,9 @@
     <Reference Include="Core">
       <HintPath>..\..\Core\Core\bin\Release\net5.0\Core.dll</HintPath>
     </Reference>
+    <Reference Include="Core.Lib">
+      <HintPath>..\..\Core\Core.Lib\bin\Release\net5.0\Core.Lib.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

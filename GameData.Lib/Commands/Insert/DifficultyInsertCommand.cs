@@ -1,32 +1,33 @@
 ﻿using Console.Lib;
-using GameData.Lib;
 using GameData.Lib.Repository;
 
-namespace GameData.ConsoleApp
+namespace GameData.Lib
 {
-	public class DifficultyInsertCommand : GameDataReaderCommand<Difficulty>
+	public class DifficultyInsertCommand : DataCommand<Difficulty>
 	{
+		private readonly IGameDataUnitOfWork unitOfWork;
+		private readonly IReader<string> textReader;
+
 		public DifficultyInsertCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO
-			, IReader<string> textReader) : base(unitOfWork, consoleIO, textReader)
+			, IReader<string> textReader)
 		{
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+			this.unitOfWork = unitOfWork;
+			this.textReader = textReader;
 		}
 
 		public override void Execute(object parameter)
 		{
-			GameDataUnit.Difficulty.Insert(
+			unitOfWork.Difficulty.Insert(
 				new Difficulty
 				{
-					Name = TextReader.Read(nameof(Difficulty.Name))
-					, Description = TextReader.Read(nameof(Difficulty.Description))
+					Name = textReader.Read(
+						new ReadConfig(50, nameof(Difficulty.Name)))
+					,
+					Description = textReader.Read(
+						new ReadConfig(250, nameof(Difficulty.Description)))
 				});
-			UnitOfWork.Save();
+			unitOfWork.Save();
 		}
 	}
 }

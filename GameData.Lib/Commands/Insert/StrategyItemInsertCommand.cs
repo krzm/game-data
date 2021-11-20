@@ -1,32 +1,30 @@
 ﻿using Console.Lib;
-using GameData.Lib;
 using GameData.Lib.Repository;
 
-namespace GameData.ConsoleApp
+namespace GameData.Lib
 {
-	public class StrategyItemInsertCommand : GameDataReaderCommand<StrategyItem>
+	public class StrategyItemInsertCommand : DataCommand<StrategyItem>
 	{
+		private readonly IGameDataUnitOfWork unitOfWork;
+		private readonly IReader<string> textReader;
+
 		public StrategyItemInsertCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO
-			, IReader<string> textReader) : base(unitOfWork, consoleIO, textReader)
+			, IReader<string> textReader)
 		{
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+			this.unitOfWork = unitOfWork;
+			this.textReader = textReader;
 		}
 
 		public override void Execute(object parameter)
 		{
-			GameDataUnit.StrategyItem.Insert(
+			unitOfWork.StrategyItem.Insert(
 				new StrategyItem
 				{
-					Name = TextReader.Read(nameof(StrategyItem.Name))
-					, Description = TextReader.Read(nameof(StrategyItem.Description))
+					Name = textReader.Read(new ReadConfig(50, nameof(StrategyItem.Name)))
+					, Description = textReader.Read(new ReadConfig(250, nameof(StrategyItem.Description)))
 				});
-			GameDataUnit.Save();
+			unitOfWork.Save();
 		}
 	}
 }

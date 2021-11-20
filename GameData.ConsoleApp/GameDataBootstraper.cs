@@ -1,14 +1,14 @@
 ﻿using Console.Lib;
-using Core;
+using Core.Lib;
 using Unity;
 
 namespace GameData.ConsoleApp
 {
 	public class GameDataBootstraper : ConsoleBootstraper
 	{
-		protected override void RegisterDependencyProviders()
+		protected override void RegisterDependencyCollection()
 		{
-			Container.RegisterSingleton<IDependencyProvider<IUnityContainer>, GameDataDependencyProvider>();
+			Container.RegisterSingleton<IUnityDependencyCollection, GameDataAppConfig>("DefaultConfig");
 		}
 	}
 }

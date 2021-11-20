@@ -1,33 +1,31 @@
 ﻿using Console.Lib;
-using GameData.Lib;
 using GameData.Lib.Repository;
 
-namespace GameData.ConsoleApp
+namespace GameData.Lib
 {
-	public class LevelTurnInsertCommand : GameDataReaderCommand<LevelTurn>
+	public class LevelTurnInsertCommand : DataCommand<LevelTurn>
 	{
+		private readonly IGameDataUnitOfWork unitOfWork;
+		private readonly IReader<string> textReader;
+
 		public LevelTurnInsertCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO
-			, IReader<string> textReader) : base(unitOfWork, consoleIO, textReader)
+			, IReader<string> textReader)
 		{
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+			this.unitOfWork = unitOfWork;
+			this.textReader = textReader;
 		}
 
 		public override void Execute(object parameter)
 		{
-			GameDataUnit.LevelTurn.Insert(
+			unitOfWork.LevelTurn.Insert(
 				new LevelTurn
 				{
-					LevelId = int.Parse(TextReader.Read(nameof(LevelTurn.LevelId)))
-					, DifficultyId = int.Parse(TextReader.Read(nameof(LevelTurn.DifficultyId)))
-					, Turns = int.Parse(TextReader.Read(nameof(LevelTurn.Turns)))
+					LevelId = int.Parse(textReader.Read(new ReadConfig(6, nameof(LevelTurn.LevelId))))
+					, DifficultyId = int.Parse(textReader.Read(new ReadConfig(6, nameof(LevelTurn.DifficultyId))))
+					, Turns = int.Parse(textReader.Read(new ReadConfig(6, nameof(LevelTurn.Turns))))
 				});
-			GameDataUnit.Save();
+			unitOfWork.Save();
 		}
 	}
 }
