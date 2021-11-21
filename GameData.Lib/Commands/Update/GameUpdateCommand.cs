@@ -1,4 +1,5 @@
-﻿using Console.Lib;
+﻿using System.Collections.Generic;
+using Console.Lib;
 using GameData.Lib.Repository;
 
 namespace GameData.Lib
@@ -6,31 +7,36 @@ namespace GameData.Lib
 	public class GameUpdateCommand : DataCommand<Game>
 	{
 		private readonly IGameDataUnitOfWork unitOfWork;
-		private readonly IConsoleIO consoleIO;
+		private readonly ICommandRunner commandRunner;
+        private readonly IReader<string> requiredTextReader;
 
 		public GameUpdateCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO)
+			, ICommandRunner commandRunner
+			, List<IReader<string>> textReader)
 		{
 			this.unitOfWork = unitOfWork;
-			this.consoleIO = consoleIO;
+            this.commandRunner = commandRunner;
+            requiredTextReader = textReader[0];
 		}
 
 		public override void Execute(object parameter)
 		{
-			consoleIO.WriteLine($"Select {TypeName} Id.");
-			var id = int.Parse(consoleIO.ReadLine());
-			var game = unitOfWork.Game.GetByID(id);
-			consoleIO.WriteLine($"Select property number. 1-Name, 2-Description");
-			var nr = int.Parse(consoleIO.ReadLine());
-			consoleIO.WriteLine($"Type new value:");
-			var text = consoleIO.ReadLine();
+			var id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TypeName} Id.")));
+
+			var model = unitOfWork.Game.GetByID(id);
+			
+			var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6
+				, $"Select property number. 1-{nameof(Game.Name)}, 2-{nameof(Game.Description)}.")));
+
 			if (nr == 1)
-				game.Name = text;
+				model.Name = requiredTextReader.Read(new ReadConfig(50, nameof(Game.Name)));
 			if (nr == 2)
-				game.Description = text;
+				model.Description = requiredTextReader.Read(new ReadConfig(250, nameof(Game.Description)));
+			
 			unitOfWork.Save();
-			consoleIO.WriteLine($"{TypeName} updated.");
+			
+			commandRunner.RunCommand(nameof(Game).ToLowerInvariant());
 		}
 	}
 }

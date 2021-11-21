@@ -1,4 +1,5 @@
-﻿using Console.Lib;
+﻿using System.Collections.Generic;
+using Console.Lib;
 using GameData.Lib.Repository;
 
 namespace GameData.Lib
@@ -6,34 +7,34 @@ namespace GameData.Lib
 	public class LevelTurnUpdateCommand : DataCommand<LevelTurn>
 	{
 		private readonly IGameDataUnitOfWork unitOfWork;
-		private readonly IConsoleIO consoleIO;
+		private readonly ICommandRunner commandRunner;
+        private readonly IReader<string> requiredTextReader;
 
 		public LevelTurnUpdateCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO)
+			, ICommandRunner commandRunner
+			, List<IReader<string>> textReader)
 		{
 			this.unitOfWork = unitOfWork;
-			this.consoleIO = consoleIO;
-		}
-
-		public override bool CanExecute(object parameter)
-		{
-			return true;
+            this.commandRunner = commandRunner;
+            requiredTextReader = textReader[0];
 		}
 
 		public override void Execute(object parameter)
 		{
-			consoleIO.WriteLine($"Select {TypeName} Id.");
-			var id = int.Parse(consoleIO.ReadLine());
-			var item = unitOfWork.LevelTurn.GetByID(id);
-			consoleIO.WriteLine($"Select property number. 1-Turns");
-			var nr = int.Parse(consoleIO.ReadLine());
-			consoleIO.WriteLine($"Type new value:");
-			var text = consoleIO.ReadLine();
+			var id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TypeName} Id.")));
+
+			var model = unitOfWork.LevelTurn.GetByID(id);
+			
+			var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6
+				, $"Select property number. 1-{nameof(LevelTurn.Turns)}.")));
+
 			if (nr == 1)
-				item.Turns = int.Parse(text);
+				model.Turns = int.Parse(requiredTextReader.Read(new ReadConfig(6, nameof(LevelTurn.Turns))));
+			
 			unitOfWork.Save();
-			consoleIO.WriteLine($"{TypeName} updated.");
+			
+			commandRunner.RunCommand(nameof(LevelTurn).ToLowerInvariant());
 		}
 	}
 }

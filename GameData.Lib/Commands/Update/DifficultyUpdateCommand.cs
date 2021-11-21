@@ -1,4 +1,5 @@
-﻿using Console.Lib;
+﻿using System.Collections.Generic;
+using Console.Lib;
 using GameData.Lib.Repository;
 
 namespace GameData.Lib
@@ -6,37 +7,36 @@ namespace GameData.Lib
     public class DifficultyUpdateCommand : DataCommand<Difficulty>
 	{
 		private readonly IGameDataUnitOfWork unitOfWork;
-		private readonly IConsoleIO consoleIO;
-		private readonly IReader<string> textReader;
+        private readonly ICommandRunner commandRunner;
+        private readonly IReader<string> requiredTextReader;
 
 		public DifficultyUpdateCommand(
 			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO
-			, IReader<string> textReader)
+			, ICommandRunner commandRunner
+			, List<IReader<string>> textReader)
 		{
 			this.unitOfWork = unitOfWork;
-			this.consoleIO = consoleIO;
-			this.textReader = textReader;
+            this.commandRunner = commandRunner;
+            requiredTextReader = textReader[0];
 		}
 
 		public override void Execute(object parameter)
 		{
-			var name = nameof(Difficulty.Name);
-			var description = nameof(Difficulty.Description);
+			var id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TypeName} Id.")));
 
-			consoleIO.WriteLine($"Select {TypeName} Id.");
-			var id = int.Parse(consoleIO.ReadLine());
-			var game = unitOfWork.Difficulty.GetByID(id);
+			var model = unitOfWork.Difficulty.GetByID(id);
 
-			consoleIO.WriteLine($"Select property number. 1-{name}, 2-{description}");
-			var nr = int.Parse(consoleIO.ReadLine());
+			var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6
+				, $"Select property number. 1-{nameof(Difficulty.Name)}, 2-{nameof(Difficulty.Description)}.")));
+
 			if (nr == 1)
-				game.Name = textReader.Read(new ReadConfig(50, name));
+				model.Name = requiredTextReader.Read(new ReadConfig(50, nameof(Difficulty.Name)));
 			if (nr == 2)
-				game.Description = textReader.Read(new ReadConfig(250, description));
+				model.Description = requiredTextReader.Read(new ReadConfig(250, nameof(Difficulty.Description)));
 			
 			unitOfWork.Save();
-			consoleIO.WriteLine($"{TypeName} updated.");
+			
+			commandRunner.RunCommand(nameof(Difficulty).ToLowerInvariant());
 		}
 	}
 }
