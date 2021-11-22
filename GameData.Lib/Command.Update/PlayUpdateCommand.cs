@@ -32,11 +32,8 @@ namespace GameData.Lib
 
 		public override void Execute(object parameter)
 		{
-			var description = nameof(Play.Description);
-			var start = nameof(Play.Start);
-			var end = nameof(Play.End);
-
 			var id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TypeName} Id.")));
+			
 			var model = unitOfWork.Play.GetByID(id);
 
 			while (model == null)
@@ -47,18 +44,21 @@ namespace GameData.Lib
 				model = unitOfWork.Play.GetByID(id);
 			}
 
+			var p1 = nameof(Play.Description);
+			var p2 = nameof(Play.Start);
+			var p3 = nameof(Play.End);
+
 			var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6
-				, $"Select property number. 1-{description}, 2-{start}, 3-{end}.")));
+				, $"Select property number. 1-{p1}, 2-{p2}, 3-{p3}.")));
+
 			if (nr == 1)
-				model.Description = requiredTextReader.Read(new ReadConfig(250, nameof(Play.Description)));
+				model.Description = requiredTextReader.Read(new ReadConfig(250, p1));
 			if (nr == 2)
 				model.Start = optionalDateTimeReader.Read(
-					new ReadConfig(16, nameof(Play.Start), Format: Format, DefaultValue: DateTime.Now.ToString(Format))
-				);
+					new ReadConfig(16, p2, Format: Format, DefaultValue: DateTime.Now.ToString(Format)));
 			if (nr == 3)
 				model.End = optionalDateTimeReader.Read(
-					new ReadConfig(16, nameof(Play.End), Format: Format, DefaultValue: DateTime.Now.ToString(Format))
-				);
+					new ReadConfig(16, p3, Format: Format, DefaultValue: DateTime.Now.ToString(Format)));
 
 			if (model.Start.HasValue && model.End.HasValue)
 			{
@@ -66,6 +66,7 @@ namespace GameData.Lib
 			}
 
 			unitOfWork.Save();
+
 			commandRunner.RunCommand(nameof(Play).ToLowerInvariant());
 		}
 	}

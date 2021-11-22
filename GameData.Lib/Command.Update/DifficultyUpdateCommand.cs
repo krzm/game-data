@@ -26,13 +26,16 @@ namespace GameData.Lib
 
 			var model = unitOfWork.Difficulty.GetByID(id);
 
-			var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6
-				, $"Select property number. 1-{nameof(Difficulty.Name)}, 2-{nameof(Difficulty.Description)}.")));
+            const string p1 = nameof(Difficulty.Name);
+            const string p2 = nameof(Difficulty.Description);
+			
+            var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6
+				, $"Select property number. 1-{p1}, 2-{p2}.")));
 
 			if (nr == 1)
-				model.Name = requiredTextReader.Read(new ReadConfig(50, nameof(Difficulty.Name)));
+				model.Name = requiredTextReader.Read(new ReadConfig(50, p1));
 			if (nr == 2)
-				model.Description = requiredTextReader.Read(new ReadConfig(250, nameof(Difficulty.Description)));
+				model.Description = requiredTextReader.Read(new ReadConfig(250, p2));
 			
 			unitOfWork.Save();
 			

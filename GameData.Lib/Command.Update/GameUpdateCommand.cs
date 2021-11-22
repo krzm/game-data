@@ -4,13 +4,13 @@ using GameData.Lib.Repository;
 
 namespace GameData.Lib
 {
-	public class LevelTurnUpdateCommand : DataCommand<LevelTurn>
+	public class GameUpdateCommand : DataCommand<Game>
 	{
 		private readonly IGameDataUnitOfWork unitOfWork;
 		private readonly ICommandRunner commandRunner;
         private readonly IReader<string> requiredTextReader;
 
-		public LevelTurnUpdateCommand(
+		public GameUpdateCommand(
 			IGameDataUnitOfWork unitOfWork
 			, ICommandRunner commandRunner
 			, List<IReader<string>> textReader)
@@ -24,17 +24,22 @@ namespace GameData.Lib
 		{
 			var id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TypeName} Id.")));
 
-			var model = unitOfWork.LevelTurn.GetByID(id);
+			var model = unitOfWork.Game.GetByID(id);
+
+            const string p1 = nameof(Game.Name);
+            const string p2 = nameof(Game.Description);
 			
-			var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6
-				, $"Select property number. 1-{nameof(LevelTurn.Turns)}.")));
+            var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6
+				, $"Select property number. 1-{p1}, 2-{p2}.")));
 
 			if (nr == 1)
-				model.Turns = int.Parse(requiredTextReader.Read(new ReadConfig(6, nameof(LevelTurn.Turns))));
+				model.Name = requiredTextReader.Read(new ReadConfig(50, p1));
+			if (nr == 2)
+				model.Description = requiredTextReader.Read(new ReadConfig(250, p2));
 			
 			unitOfWork.Save();
 			
-			commandRunner.RunCommand(nameof(LevelTurn).ToLowerInvariant());
+			commandRunner.RunCommand(nameof(Game).ToLowerInvariant());
 		}
 	}
 }

@@ -24,7 +24,7 @@ namespace GameData.Lib
 					LevelId = int.Parse(textReader.Read(new ReadConfig(6, nameof(Play.LevelId))))
 					, DifficultyId = int.Parse(textReader.Read(new ReadConfig(6, nameof(Play.DifficultyId))))
 					, StrategyId = int.Parse(textReader.Read(new ReadConfig(6, nameof(Play.StrategyId))))
-					, Description = textReader.Read(new ReadConfig(6, nameof(Play.Description)))
+					, Description = textReader.Read(new ReadConfig(250, nameof(Play.Description)))
 				});
 			unitOfWork.Save();
 		}

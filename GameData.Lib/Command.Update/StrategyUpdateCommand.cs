@@ -7,9 +7,7 @@ namespace GameData.Lib
 	public class StrategyUpdateCommand : DataCommand<Strategy>
 	{
 		private readonly IGameDataUnitOfWork unitOfWork;
-
 		private readonly ICommandRunner commandRunner;
-
 		private readonly IReader<string> requiredTextReader;
 
 		public StrategyUpdateCommand(
@@ -25,16 +23,22 @@ namespace GameData.Lib
 		public override void Execute(object parameter)
 		{
 			var id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TypeName} Id.")));
+			
 			var model = unitOfWork.Strategy.GetByID(id);
 
-			var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6,
-				$"Select property number. 1-{nameof(Strategy.Name)}, 2-{nameof(Strategy.Description)}.")));
+            const string p1 = nameof(Strategy.Name);
+            const string p2 = nameof(Strategy.Description);
+
+            var nr = int.Parse(requiredTextReader.Read(new ReadConfig(6,
+				$"Select property number. 1-{p1}, 2-{p2}.")));
+				
 			if (nr == 1)
-				model.Name = requiredTextReader.Read(new ReadConfig(50, nameof(Strategy.Name)));
+				model.Name = requiredTextReader.Read(new ReadConfig(50, p1));
 			if (nr == 2)
-				model.Description = requiredTextReader.Read(new ReadConfig(250, nameof(Strategy.Description)));
+				model.Description = requiredTextReader.Read(new ReadConfig(250, p2));
 
 			unitOfWork.Save();
+			
 			commandRunner.RunCommand(nameof(Strategy).ToLowerInvariant());
 		}
 	}
