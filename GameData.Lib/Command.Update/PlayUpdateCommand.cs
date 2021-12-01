@@ -9,38 +9,49 @@ namespace GameData.Lib
 	{
 		private const string Format = "dd.MM.yyyy HH:mm";
 		private readonly IGameDataUnitOfWork unitOfWork;
-		private readonly ICommandRunner commandRunner;
-		private readonly IConsoleIO consoleIO;
+		private readonly IOutput output;
 		private readonly IReader<string> requiredTextReader;
 		private readonly IReader<string> optionalTextReader;
 		private readonly IReader<DateTime?> optionalDateTimeReader;
+        private ICommandRunner commandRunner;
 
 		public PlayUpdateCommand(
-			IGameDataUnitOfWork unitOfWork
-			, ICommandRunner commandRunner
-			, IConsoleIO consoleIO
-			, List<IReader<string>> textReader
+			TextCommand textCommand
+			, IGameDataUnitOfWork unitOfWork
+			, IOutput output
+			, List<IReader<string>> textReaders
 			, List<IReader<DateTime?>> optionalDateTimeReader)
+			: base(textCommand)
 		{
+			ArgumentNullException.ThrowIfNull(unitOfWork);
+			ArgumentNullException.ThrowIfNull(output);
+			ArgumentNullException.ThrowIfNull(textReaders);
+			ArgumentNullException.ThrowIfNull(optionalDateTimeReader);
+
 			this.unitOfWork = unitOfWork;
-			this.commandRunner = commandRunner;
-			this.consoleIO = consoleIO;
-			requiredTextReader = textReader[0];
-			optionalTextReader = textReader[1];
+			this.output = output;
+			requiredTextReader = textReaders[0];
+			optionalTextReader = textReaders[1];
 			this.optionalDateTimeReader = optionalDateTimeReader[0];
+		}
+		
+		public void SetCommandRunner(ICommandRunner commandRunner)
+		{
+			ArgumentNullException.ThrowIfNull(commandRunner);
+            this.commandRunner = commandRunner;
 		}
 
 		public override void Execute(object parameter)
 		{
-			var id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TypeName} Id.")));
+			var id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TextCommand.TypeName} Id.")));
 			
 			var model = unitOfWork.Play.GetByID(id);
 
 			while (model == null)
 			{
-				consoleIO.WriteLine($"Id {id} doesn't exist.");
-				consoleIO.WriteLine($"Select {TypeName} Id.");
-				id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TypeName} Id.")));
+				output.WriteLine($"Id {id} doesn't exist.");
+				output.WriteLine($"Select {TextCommand.TypeName} Id.");
+				id = int.Parse(requiredTextReader.Read(new ReadConfig(6, $"Select {TextCommand.TypeName} Id.")));
 				model = unitOfWork.Play.GetByID(id);
 			}
 
@@ -55,10 +66,10 @@ namespace GameData.Lib
 				model.Description = requiredTextReader.Read(new ReadConfig(250, p1));
 			if (nr == 2)
 				model.Start = optionalDateTimeReader.Read(
-					new ReadConfig(16, p2, Format: Format, DefaultValue: DateTime.Now.ToString(Format)));
+					new ReadConfig(16, p2, Format, DateTime.Now.ToString(Format)));
 			if (nr == 3)
 				model.End = optionalDateTimeReader.Read(
-					new ReadConfig(16, p3, Format: Format, DefaultValue: DateTime.Now.ToString(Format)));
+					new ReadConfig(16, p3, Format, DateTime.Now.ToString(Format)));
 
 			if (model.Start.HasValue && model.End.HasValue)
 			{
@@ -67,7 +78,7 @@ namespace GameData.Lib
 
 			unitOfWork.Save();
 
-			commandRunner.RunCommand(nameof(Play).ToLowerInvariant());
+			commandRunner.RunCommand(TextCommand.TypeName.ToLowerInvariant());
 		}
 	}
 }

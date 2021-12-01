@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Console.Lib;
 using GameData.Lib.Repository;
 
@@ -7,23 +8,32 @@ namespace GameData.Lib
 	public class LevelUpdateCommand : DataCommand<Level>
 	{
 		private readonly IGameDataUnitOfWork unitOfWork;
-        private readonly ICommandRunner commandRunner;
         private readonly IReader<string> requiredTextReader;
+        private ICommandRunner commandRunner;
 
 		public LevelUpdateCommand(
-			IGameDataUnitOfWork unitOfWork
-			, ICommandRunner commandRunner
-			, List<IReader<string>> textReader)
+			TextCommand textCommand
+			, IGameDataUnitOfWork unitOfWork
+			, List<IReader<string>> textReaders)
+			: base(textCommand)
 		{
+			ArgumentNullException.ThrowIfNull(unitOfWork);
+			ArgumentNullException.ThrowIfNull(textReaders);
+
 			this.unitOfWork = unitOfWork;
+            requiredTextReader = textReaders[0];
+		}
+
+		public void SetCommandRunner(ICommandRunner commandRunner)
+		{
+			ArgumentNullException.ThrowIfNull(commandRunner);
             this.commandRunner = commandRunner;
-            requiredTextReader = textReader[0];
 		}
 
 		public override void Execute(object parameter)
 		{
 			var id = int.Parse(requiredTextReader.Read(
-				new ReadConfig(6, $"Select {TypeName} Id.")));
+				new ReadConfig(6, $"Select {TextCommand.TypeName} Id.")));
 
 			var model = unitOfWork.Level.GetByID(id);
 
@@ -40,7 +50,7 @@ namespace GameData.Lib
 
 			unitOfWork.Save();
 
-			commandRunner.RunCommand(nameof(Level).ToLowerInvariant());
+			commandRunner.RunCommand(TextCommand.TypeName.ToLowerInvariant());
 		}
 	}
 }

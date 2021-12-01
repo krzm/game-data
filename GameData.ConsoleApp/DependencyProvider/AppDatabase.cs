@@ -5,10 +5,9 @@ using Unity;
 
 namespace GameData.ConsoleApp
 {
-	public class GameDataAppDatabase
-		: UnityDependencyProvider
+	public class AppDatabase : UnityDependencyProvider
 	{
-		public GameDataAppDatabase(
+		public AppDatabase(
 			IUnityContainer container)
 			: base(container)
 		{

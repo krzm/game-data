@@ -1,4 +1,5 @@
 ﻿using Console.Lib;
+using Unity;
 
 namespace GameData.ConsoleApp
 {
@@ -6,7 +7,9 @@ namespace GameData.ConsoleApp
 	{
 		static void Main(string[] args)
 		{
-			IConsoleBootstraper booter = new GameDataBootstraper();
+			IBootstraper booter = new Bootstraper(
+				new DependencyCollection(
+					new UnityContainer().AddExtension(new Diagnostic())));
 			booter.Boot(args);
 		}
 	}

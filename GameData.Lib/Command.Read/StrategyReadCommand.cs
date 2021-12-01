@@ -1,4 +1,5 @@
-﻿using Console.Lib;
+﻿using System;
+using Console.Lib;
 using GameData.Lib.Repository;
 
 namespace GameData.Lib
@@ -6,23 +7,29 @@ namespace GameData.Lib
 	public class StrategyReadCommand : DataCommand<Strategy>
 	{
 		private readonly IGameDataUnitOfWork unitOfWork;
-		private readonly IConsoleIO consoleIO;
+		private readonly IOutput output;
 
 		public StrategyReadCommand(
-			IGameDataUnitOfWork unitOfWork
-			, IConsoleIO consoleIO)
+			TextCommand command
+			, IGameDataUnitOfWork unitOfWork
+			, IOutput output)
+			: base(command)
 		{
+			ArgumentNullException.ThrowIfNull(unitOfWork);
+			ArgumentNullException.ThrowIfNull(output);
+			
 			this.unitOfWork = unitOfWork;
-			this.consoleIO = consoleIO;
+			this.output = output;
 		}
 
 		public override void Execute(object parameter)
 		{
+			output.Clear();
 			foreach (var item in unitOfWork.Strategy.Get())
 			{
-				consoleIO.WriteLine($"{nameof(Strategy.Id)} : {item.Id}");
-				consoleIO.WriteLine($"{nameof(Strategy.Name)} : {item.Name}");
-				consoleIO.WriteLine($"{nameof(Strategy.Description)} : {item.Description}");
+				output.WriteLine($"{nameof(Strategy.Id)} : {item.Id}");
+				output.WriteLine($"{nameof(Strategy.Name)} : {item.Name}");
+				output.WriteLine($"{nameof(Strategy.Description)} : {item.Description}");
 			}
 		}
 	}
