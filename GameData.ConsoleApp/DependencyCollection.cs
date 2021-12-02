@@ -24,6 +24,6 @@ namespace GameData.ConsoleApp
             RegisterDependencyProvider<AppCommands5>();
         
         protected override void RegisterCommandSystem() => 
-			RegisterDependencyProvider<CommandSystem<ParamCommandParser>>();
+			RegisterDependencyProvider<AppCommandSystem<ParamCommandParser>>();
 	}
 }
