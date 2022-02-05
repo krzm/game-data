@@ -1,73 +1,75 @@
 using System.Collections.Generic;
-using Console.Lib;
+using CLIFramework;
+using CLIHelper;
+using CLIReader;
 using GameData.Lib;
 using GameData.Lib.Repository;
 using Unity;
 
-namespace GameData.ConsoleApp
+namespace GameData.ConsoleApp;
+
+public class AppCommands4 
+    : AppCommands3
 {
-    public class AppCommands4 : AppCommands3
+    public AppCommands4(
+        IUnityContainer container) 
+        : base(container)
     {
-        public AppCommands4(
-            IUnityContainer container) 
-            : base(container)
-        {
-        }
+    }
 
-        protected override void RegisterCommands()
-        {
-            base.RegisterCommands();
-            RegisterStrategyCommands();
-            RegisterStrategyItemCommands();
-        }
+    protected override void RegisterCommands()
+    {
+        base.RegisterCommands();
+        RegisterStrategyCommands();
+        RegisterStrategyItemCommands();
+    }
 
-        private void RegisterStrategyCommands()
-        {
-            RegisterCommand<EntityHelpCommand<Strategy>, Strategy>(
-				"Help Strategy".ToLowerInvariant()
-				, Container.Resolve<IOutput>()
-				, new string[]
-				{
-					nameof(Strategy.Name)
-					, nameof(Strategy.Description)
-				});
+    private void RegisterStrategyCommands()
+    {
+        RegisterCommand<HelpCommand<Strategy>, Strategy>(
+            "Help Strategy".ToLowerInvariant()
+            , Container.Resolve<IOutput>()
+            , new string[]
+            {
+                nameof(Strategy.Name)
+                , nameof(Strategy.Description)
+            });
 
-            RegisterCommand<StrategyReadCommand, Strategy>(
-                "Strategy".ToLowerInvariant()
-                , Container.Resolve<IGameDataUnitOfWork>()
-                , Container.Resolve<IOutput>());
+        RegisterCommand<StrategyReadCommand, Strategy>(
+            "Strategy".ToLowerInvariant()
+            , Container.Resolve<IGameDataUnitOfWork>()
+            , Container.Resolve<IOutput>());
 
-            RegisterCommand<StrategyInsertCommand, Strategy>(
-                "Insert Strategy".ToLowerInvariant()
-                , Container.Resolve<IGameDataUnitOfWork>()
-                , Container.Resolve<IReader<string>>(nameof(RequiredTextReader)));
+        RegisterCommand<StrategyInsertCommand, Strategy>(
+            "Insert Strategy".ToLowerInvariant()
+            , Container.Resolve<IGameDataUnitOfWork>()
+            , Container.Resolve<IReader<string>>(nameof(RequiredTextReader)));
 
-            RegisterCommand<StrategyUpdateCommand, Strategy>(
-                "Update Strategy".ToLowerInvariant()
-                , Container.Resolve<IGameDataUnitOfWork>()
-                , Container.Resolve<List<IReader<string>>>());
-        }
+        RegisterCommand<StrategyUpdateCommand, Strategy>(
+            "Update Strategy".ToLowerInvariant()
+            , Container.Resolve<IGameDataUnitOfWork>()
+            , Container.Resolve<List<IReader<string>>>());
+    }
 
-        private void RegisterStrategyItemCommands()
-        {
-            RegisterCommand<EntityHelpCommand<StrategyItem>, StrategyItem>(
-				"Help StrategyItem".ToLowerInvariant()
-				, Container.Resolve<IOutput>()
-				, new string[]
-				{
-					nameof(StrategyItem.Name)
-					, nameof(StrategyItem.Description)
-				});
+    private void RegisterStrategyItemCommands()
+    {
+        RegisterCommand<HelpCommand<StrategyItem>, StrategyItem>(
+            "Help StrategyItem".ToLowerInvariant()
+            , Container.Resolve<IOutput>()
+            , new string[]
+            {
+                nameof(StrategyItem.Name)
+                , nameof(StrategyItem.Description)
+            });
 
-            RegisterCommand<StrategyItemReadCommand, StrategyItem>(
-                "StrategyItem".ToLowerInvariant()
-                , Container.Resolve<IGameDataUnitOfWork>()
-                , Container.Resolve<IOutput>());
+        RegisterCommand<StrategyItemReadCommand, StrategyItem>(
+            "StrategyItem".ToLowerInvariant()
+            , Container.Resolve<IGameDataUnitOfWork>()
+            , Container.Resolve<IOutput>());
 
-            RegisterCommand<StrategyItemInsertCommand, StrategyItem>(
-                "Insert StrategyItem".ToLowerInvariant()
-                , Container.Resolve<IGameDataUnitOfWork>()
-                , Container.Resolve<IReader<string>>(nameof(RequiredTextReader)));
-        }
+        RegisterCommand<StrategyItemInsertCommand, StrategyItem>(
+            "Insert StrategyItem".ToLowerInvariant()
+            , Container.Resolve<IGameDataUnitOfWork>()
+            , Container.Resolve<IReader<string>>(nameof(RequiredTextReader)));
     }
 }

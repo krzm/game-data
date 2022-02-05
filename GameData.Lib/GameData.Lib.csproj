@@ -13,15 +13,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Console.Lib">
-      <HintPath>..\..\Console\Console.Lib\bin\Release\net6.0\Console.Lib.dll</HintPath>
+    <Reference Include="CLIWizardHelper">
+      <HintPath>..\..\build\Build\cli-wizard-helper\CLIWizardHelper\CLIWizardHelper.dll</HintPath>
     </Reference>
-    <Reference Include="Core">
-      <HintPath>..\..\Core\Core\bin\Release\net6.0\Core.dll</HintPath>
+    <Reference Include="CLIFramework">
+      <HintPath>..\..\build\Build\cli-framework\CLIFramework\CLIFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Core.Lib">
-      <HintPath>..\..\Core\Core.Lib\bin\Release\net6.0\Core.Lib.dll</HintPath>
+    <Reference Include="CLIHelper">
+      <HintPath>..\..\build\Build\cli-helper\CLIHelper\CLIHelper.dll</HintPath>
     </Reference>
+    <Reference Include="CRUDCommandHelper">
+      <HintPath>..\..\build\Build\crud-command-helper\CRUDCommandHelper\CRUDCommandHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="CLIReader">
+      <HintPath>..\..\build\Build\cli-reader\CLIReader\CLIReader.dll</HintPath>
+    </Reference>
+    <Reference Include="EFCoreHelper">
+      <HintPath>..\..\build\Build\efcore-helper\EFCoreHelper\EFCoreHelper.dll</HintPath>
+		</Reference>
   </ItemGroup>
 
 </Project>

@@ -1,20 +1,20 @@
-﻿using Console.Lib;
+﻿using CLIFramework;
 using Unity;
 
-namespace GameData.ConsoleApp
-{
-	public class AppData : Console.Lib.AppData
-	{
-		public AppData(
-			IUnityContainer container)
-			: base(container)
-		{
-		}
+namespace GameData.ConsoleApp;
 
-		protected override void SetAppConfigData()
-		{
-			Config["AppName"] = "Log";
-			Config["CommandParser"] = nameof(ParamCommandParser);
-		}
+public class AppData 
+	: CLIFramework.AppData
+{
+	public AppData(
+		IUnityContainer container)
+		: base(container)
+	{
+	}
+
+	protected override void SetAppConfigData()
+	{
+		Config["AppName"] = "Log";
+		Config["CommandParser"] = nameof(ParamCommandParser);
 	}
 }

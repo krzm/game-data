@@ -1,16 +1,15 @@
-﻿using Console.Lib;
+﻿using DIHelper;
 using Unity;
 
-namespace GameData.ConsoleApp
+namespace GameData.ConsoleApp;
+
+class Program
 {
-	class Program
+	static void Main(string[] args)
 	{
-		static void Main(string[] args)
-		{
-			IBootstraper booter = new Bootstraper(
-				new DependencyCollection(
-					new UnityContainer().AddExtension(new Diagnostic())));
-			booter.Boot(args);
-		}
+		IBootstraper booter = new Bootstraper(
+			new DependencySuite(
+				new UnityContainer().AddExtension(new Diagnostic())));
+		booter.Boot(args);
 	}
 }

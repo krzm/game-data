@@ -1,23 +1,23 @@
-﻿using Core;
-using Core.Lib;
+﻿using DIHelper.Unity;
+using EFCoreHelper;
 using GameData.Lib.Repository;
 using Unity;
 
-namespace GameData.ConsoleApp
-{
-	public class AppDatabase : UnityDependencyProvider
-	{
-		public AppDatabase(
-			IUnityContainer container)
-			: base(container)
-		{
-		}
+namespace GameData.ConsoleApp;
 
-		public override void RegisterDependencies()
-		{
-			var unitOfWork = Container.Resolve<GameDataUnitOfWork>();
-			Container.RegisterInstance<IUnitOfWork>(unitOfWork, InstanceLifetime.Singleton);
-			Container.RegisterInstance<IGameDataUnitOfWork>(unitOfWork, InstanceLifetime.Singleton);
-		}
+public class AppDatabase 
+	: UnityDependencySet
+{
+	public AppDatabase(
+		IUnityContainer container)
+		: base(container)
+	{
+	}
+
+	public override void Register()
+	{
+		var unitOfWork = Container.Resolve<GameDataUnitOfWork>();
+		Container.RegisterInstance<IUnitOfWork>(unitOfWork, InstanceLifetime.Singleton);
+		Container.RegisterInstance<IGameDataUnitOfWork>(unitOfWork, InstanceLifetime.Singleton);
 	}
 }
