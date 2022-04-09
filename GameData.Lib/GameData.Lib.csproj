@@ -12,13 +12,36 @@
     <ProjectReference Include="..\GameData.Data.Lib\GameData.Data.Lib.csproj" />
   </ItemGroup>
 
+  <!--Debug refs-->
+	<!-- <ItemGroup>
+		<Reference Include="EFCoreHelper">
+			<HintPath>..\..\efcore-helper\EFCoreHelper\bin\Debug\net6.0\EFCoreHelper.dll</HintPath>
+		</Reference>
+		<Reference Include="CLIHelper">
+			<HintPath>..\..\cli-helper\CLIHelper\bin\Debug\net6.0\CLIHelper.dll</HintPath>
+		</Reference>
+    <Reference Include="CLIReader">	
+			<HintPath>..\..\cli-reader\CLIReader\bin\Debug\net6.0\CLIReader.dll</HintPath>
+		</Reference>
+    <Reference Include="CRUDCommandHelper">
+			<HintPath>..\..\crud-command-helper\CRUDCommandHelper\bin\Debug\net6.0\CRUDCommandHelper.dll</HintPath>
+		</Reference>
+    <Reference Include="CLIWizardHelper">
+			<HintPath>..\..\cli-wizard-helper\CLIWizardHelper\bin\Debug\net6.0\CLIWizardHelper.dll</HintPath>
+		</Reference>
+    <Reference Include="CLIFramework">
+			<HintPath>..\..\cli-framework\CLIFramework\bin\Debug\net6.0\CLIFramework.dll</HintPath>
+		</Reference>
+	</ItemGroup> -->
+
+	<!--Release refs-->
   <ItemGroup>
-    <Reference Include="CLIHelper">
-      <HintPath>..\..\..\Build\cli-helper\CLIHelper\CLIHelper.dll</HintPath>
-    </Reference>
     <Reference Include="EFCoreHelper">
       <HintPath>..\..\..\Build\efcore-helper\EFCoreHelper\EFCoreHelper.dll</HintPath>
 		</Reference>
+    <Reference Include="CLIHelper">
+      <HintPath>..\..\..\Build\cli-helper\CLIHelper\CLIHelper.dll</HintPath>
+    </Reference>
     <Reference Include="CLIReader">
       <HintPath>..\..\..\Build\cli-reader\CLIReader\CLIReader.dll</HintPath>
     </Reference>

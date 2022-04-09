@@ -14,7 +14,7 @@ public class AppData
 
 	protected override void SetAppConfigData()
 	{
-		Config["AppName"] = "Log";
+		Config["AppName"] = "Game";
 		Config["CommandParser"] = nameof(ParamCommandParser);
 	}
 }
