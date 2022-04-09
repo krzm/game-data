@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Unity" Version="5.11.10" />
+	<ItemGroup>
+		<PackageReference Include="Unity" Version="5.11.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
@@ -16,20 +16,20 @@
 		<PackageReference Include="Serilog" Version="2.10.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-  </ItemGroup>
+	</ItemGroup>
   
-  <ItemGroup>
+	<ItemGroup>
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-  </ItemGroup>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GameData.Data.Lib\GameData.Data.Lib.csproj" />
-    <ProjectReference Include="..\GameData.Lib\GameData.Lib.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\GameData.Data.Lib\GameData.Data.Lib.csproj" />
+		<ProjectReference Include="..\GameData.Lib\GameData.Lib.csproj" />
+	</ItemGroup>
 
-  <!--Debug refs-->
+  	<!--Debug refs-->
 	<!-- <ItemGroup>
 		<Reference Include="EFCoreHelper">
 			<HintPath>..\..\efcore-helper\EFCoreHelper\bin\Debug\net6.0\EFCoreHelper.dll</HintPath>
@@ -70,43 +70,42 @@
 	</ItemGroup> -->
 
 	<!--Release refs-->
-  <ItemGroup>
-    <Reference Include="EFCoreHelper">
-      <HintPath>..\..\..\Build\efcore-helper\EFCoreHelper\EFCoreHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="DIHelper">
-      <HintPath>..\..\..\Build\di-helper\DIHelper\DIHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetExtension">
-      <HintPath>..\..\..\Build\dotnet-extension\DotNetExtension\DotNetExtension.dll</HintPath>
-    </Reference>
-    <Reference Include="CLIHelper">
-      <HintPath>..\..\..\Build\cli-helper\CLIHelper\CLIHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="Config.Wrapper">
+	<ItemGroup>
+		<Reference Include="EFCoreHelper">
+			<HintPath>..\..\..\Build\efcore-helper\EFCoreHelper\EFCoreHelper.dll</HintPath>
+		</Reference>
+		<Reference Include="DIHelper">
+			<HintPath>..\..\..\Build\di-helper\DIHelper\DIHelper.dll</HintPath>
+		</Reference>
+		<Reference Include="DotNetExtension">
+			<HintPath>..\..\..\Build\dotnet-extension\DotNetExtension\DotNetExtension.dll</HintPath>
+		</Reference>
+		<Reference Include="CLIHelper">
+			<HintPath>..\..\..\Build\cli-helper\CLIHelper\CLIHelper.dll</HintPath>
+		</Reference>
+		<Reference Include="Config.Wrapper">
 			<HintPath>..\..\..\Build\config-wrapper\Config.Wrapper\Config.Wrapper.dll</HintPath>
 		</Reference>
-    <Reference Include="ModelHelper">
-      <HintPath>..\..\..\Build\model-helper\ModelHelper\ModelHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="CLIReader">
-      <HintPath>..\..\..\Build\cli-reader\CLIReader\CLIReader.dll</HintPath>
-    </Reference>
-     <Reference Include="DataToTable">
-      <HintPath>..\..\..\Build\datatotable\DataToTable\DataToTable.dll</HintPath>
-    </Reference>
-    <Reference Include="Serilog.Wrapper">
+		<Reference Include="ModelHelper">
+			<HintPath>..\..\..\Build\model-helper\ModelHelper\ModelHelper.dll</HintPath>
+		</Reference>
+		<Reference Include="CLIReader">
+			<HintPath>..\..\..\Build\cli-reader\CLIReader\CLIReader.dll</HintPath>
+		</Reference>
+		<Reference Include="DataToTable">
+			<HintPath>..\..\..\Build\datatotable\DataToTable\DataToTable.dll</HintPath>
+		</Reference>
+		<Reference Include="Serilog.Wrapper">
 			<HintPath>..\..\..\Build\serilog-wrapper\Serilog.Wrapper\Serilog.Wrapper.dll</HintPath>
 		</Reference>
-    <Reference Include="CRUDCommandHelper">
-      <HintPath>..\..\..\Build\crud-command-helper\CRUDCommandHelper\CRUDCommandHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="CLIWizardHelper">
-      <HintPath>..\..\..\Build\cli-wizard-helper\CLIWizardHelper\CLIWizardHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="CLIFramework">
-      <HintPath>..\..\..\Build\cli-framework\CLIFramework\CLIFramework.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
+		<Reference Include="CRUDCommandHelper">
+			<HintPath>..\..\..\Build\crud-command-helper\CRUDCommandHelper\CRUDCommandHelper.dll</HintPath>
+		</Reference>
+		<Reference Include="CLIWizardHelper">
+			<HintPath>..\..\..\Build\cli-wizard-helper\CLIWizardHelper\CLIWizardHelper.dll</HintPath>
+		</Reference>
+		<Reference Include="CLIFramework">
+			<HintPath>..\..\..\Build\cli-framework\CLIFramework\CLIFramework.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 </Project>
