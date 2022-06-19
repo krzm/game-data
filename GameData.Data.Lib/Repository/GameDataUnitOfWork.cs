@@ -7,7 +7,6 @@ public class GameDataUnitOfWork
 	: UnitOfWork
         , IGameDataUnitOfWork
 {
-	private readonly GameDataContext context;
 	private IRepository<Game> game;
 	private IRepository<Level> level;
 	private IRepository<Play> play;
