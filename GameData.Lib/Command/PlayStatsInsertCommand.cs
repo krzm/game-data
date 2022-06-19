@@ -6,7 +6,6 @@ using GameData.Lib.Repository;
 
 namespace GameData.Lib;
 
-//todo: use readers ?
 public class PlayStatsInsertCommand 
 	: DataCommand<PlayStats>
 {

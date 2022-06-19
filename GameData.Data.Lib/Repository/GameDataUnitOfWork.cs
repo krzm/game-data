@@ -1,161 +1,62 @@
-﻿using System;
-using EFCoreHelper;
+﻿using EFCore.Helper;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameData.Lib.Repository;
 
 public class GameDataUnitOfWork 
-	: IGameDataUnitOfWork
+	: UnitOfWork
+        , IGameDataUnitOfWork
 {
-	private readonly GameDataContext context = new();
-	private EFGenericRepository<Game, GameDataContext> game;
-	private EFGenericRepository<Level, GameDataContext> level;
-	private EFGenericRepository<Play, GameDataContext> play;
-	private EFGenericRepository<Strategy, GameDataContext> strategy;
-	private EFGenericRepository<StrategyItem, GameDataContext> strategyItem;
-	private EFGenericRepository<StrategyStrategyItem, GameDataContext> strategyStrategyItem;
-	private EFGenericRepository<Difficulty, GameDataContext> difficulty;
-	private EFGenericRepository<LevelTurn, GameDataContext> levelTurn;
-	private EFGenericRepository<PlayStats, GameDataContext> playStats;
+	private readonly GameDataContext context;
+	private IRepository<Game> game;
+	private IRepository<Level> level;
+	private IRepository<Play> play;
+	private IRepository<PlayStats> playStats;
+	private IRepository<Strategy> strategy;
+	private IRepository<StrategyItem> strategyItem;
+	private IRepository<StrategyStrategyItem> strategyStrategyItem;
+	private IRepository<Difficulty> difficulty;
+	private IRepository<LevelTurn> levelTurn;
 
-	private bool disposed = false;
+    public IRepository<Game> Game => game;
 
-	public EFGenericRepository<Game, GameDataContext> Game
-	{
-		get
-		{
+	public IRepository<Level> Level => level;
 
-			if (game == null)
-			{
-				game = new EFGenericRepository<Game, GameDataContext>(context);
-			}
-			return game;
-		}
-	}
+	public IRepository<Play> Play => play;
 
-	public EFGenericRepository<Level, GameDataContext> Level
-	{
-		get
-		{
+	public IRepository<PlayStats> PlayStats => playStats;
 
-			if (level == null)
-			{
-				level = new EFGenericRepository<Level, GameDataContext>(context);
-			}
-			return level;
-		}
-	}
+	public IRepository<Strategy> Strategy => strategy;
 
-	public EFGenericRepository<Play, GameDataContext> Play
-	{
-		get
-		{
+	public IRepository<StrategyItem> StrategyItem => strategyItem;
 
-			if (play == null)
-			{
-				play = new EFGenericRepository<Play, GameDataContext>(context);
-			}
-			return play;
-		}
-	}
+	public IRepository<StrategyStrategyItem> StrategyStrategyItem => strategyStrategyItem;
 
-	public EFGenericRepository<PlayStats, GameDataContext> PlayStats
-	{
-		get
-		{
+	public IRepository<Difficulty> Difficulty => difficulty;
 
-			if (playStats == null)
-			{
-				playStats = new EFGenericRepository<PlayStats, GameDataContext>(context);
-			}
-			return playStats;
-		}
-	}
+	public IRepository<LevelTurn> LevelTurn => levelTurn;
 
-	public EFGenericRepository<Strategy, GameDataContext> Strategy
-	{
-		get
-		{
-
-			if (strategy == null)
-			{
-				strategy = new EFGenericRepository<Strategy, GameDataContext>(context);
-			}
-			return strategy;
-		}
-	}
-
-	public EFGenericRepository<StrategyItem, GameDataContext> StrategyItem
-	{
-		get
-		{
-
-			if (strategyItem == null)
-			{
-				strategyItem = new EFGenericRepository<StrategyItem, GameDataContext>(context);
-			}
-			return strategyItem;
-		}
-	}
-
-	public EFGenericRepository<StrategyStrategyItem, GameDataContext> StrategyStrategyItem
-	{
-		get
-		{
-
-			if (strategyStrategyItem == null)
-			{
-				strategyStrategyItem = new EFGenericRepository<StrategyStrategyItem, GameDataContext>(context);
-			}
-			return strategyStrategyItem;
-		}
-	}
-
-	public EFGenericRepository<Difficulty, GameDataContext> Difficulty
-	{
-		get
-		{
-
-			if (difficulty == null)
-			{
-				difficulty = new EFGenericRepository<Difficulty, GameDataContext>(context);
-			}
-			return difficulty;
-		}
-	}
-
-	public EFGenericRepository<LevelTurn, GameDataContext> LevelTurn
-	{
-		get
-		{
-
-			if (levelTurn == null)
-			{
-				levelTurn = new EFGenericRepository<LevelTurn, GameDataContext>(context);
-			}
-			return levelTurn;
-		}
-	}
-
-	public void Save()
-	{
-		context.SaveChanges();
-	}
-
-	protected virtual void Dispose(bool disposing)
-	{
-		if (!disposed)
-		{
-			if (disposing)
-			{
-				context.Dispose();
-			}
-		}
-		disposed = true;
-	}
-
-	public void Dispose()
-	{
-		Dispose(true);
-		GC.SuppressFinalize(this);
-	}
+     public GameDataUnitOfWork(
+        DbContext context
+        , IRepository<Game> game
+        , IRepository<Level> level
+        , IRepository<Play> play
+        , IRepository<PlayStats> playStats
+        , IRepository<Strategy> strategy
+        , IRepository<StrategyItem> strategyItem
+        , IRepository<StrategyStrategyItem> strategyStrategyItem
+        , IRepository<Difficulty> difficulty
+        , IRepository<LevelTurn> levelTurn)
+            : base(context)
+    {
+        this.game = game;
+        this.level = level;
+        this.play = play;
+        this.playStats = playStats;
+        this.strategy = strategy;
+        this.strategyItem = strategyItem;
+        this.strategyStrategyItem = strategyStrategyItem;
+        this.difficulty = difficulty;
+        this.levelTurn = levelTurn;
+    }
 }

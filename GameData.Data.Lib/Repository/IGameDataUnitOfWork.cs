@@ -1,17 +1,17 @@
-﻿using EFCoreHelper;
+﻿using EFCore.Helper;
 
 namespace GameData.Lib.Repository;
 
 public interface IGameDataUnitOfWork 
-	: IUnitOfWork
+    : IUnitOfWork
 {
-	EFGenericRepository<Difficulty, GameDataContext> Difficulty { get; }
-	EFGenericRepository<Game, GameDataContext> Game { get; }
-	EFGenericRepository<Level, GameDataContext> Level { get; }
-	EFGenericRepository<Play, GameDataContext> Play { get; }
-	EFGenericRepository<PlayStats, GameDataContext> PlayStats { get; }
-	EFGenericRepository<Strategy, GameDataContext> Strategy { get; }
-	EFGenericRepository<StrategyItem, GameDataContext> StrategyItem { get; }
-	EFGenericRepository<StrategyStrategyItem, GameDataContext> StrategyStrategyItem { get; }
-	EFGenericRepository<LevelTurn, GameDataContext> LevelTurn { get; }
+	IRepository<Game> Game { get; }
+	IRepository<Level> Level { get; }
+	IRepository<Play> Play { get; }
+	IRepository<PlayStats> PlayStats { get; }
+	IRepository<Strategy> Strategy { get; }
+	IRepository<StrategyItem> StrategyItem { get; }
+	IRepository<StrategyStrategyItem> StrategyStrategyItem { get; }
+	IRepository<Difficulty> Difficulty { get; }
+	IRepository<LevelTurn> LevelTurn { get; }
 }
